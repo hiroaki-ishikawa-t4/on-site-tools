@@ -48,9 +48,18 @@ class RosbagRecorderDialog(QDialog):
         if os.path.exists(save_dir):
             QMessageBox.warning(None, 'Error', 'Directory is already exists. Please change title.', QMessageBox.Ok)
             return
+        
+        # Check option
+        if options == '':
+            ret = QMessageBox.information(None, 'Info', "You didn't specified any option. Is it means you want to record everything?", QMessageBox.Yes | QMessageBox.No)
+            if ret == QMessageBox.Yes:
+                options = '-a'
 
+        # Start record
         if not self.rosbag_controller.start_record(root_dir, title, description, options):
             QMessageBox.warning(None, 'Warning', 'Failed to start rosbag record!', QMessageBox.Ok)
+            return
+
         self.ui.start_button.setEnabled(False)
         self.ui.stop_button.setEnabled(True)
 
