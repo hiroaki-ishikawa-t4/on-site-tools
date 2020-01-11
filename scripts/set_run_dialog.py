@@ -9,6 +9,8 @@ from ui.ui_set_run_dialog import Ui_set_run_dialog
 from controller.vehicle_manual_controller import VehicleManualController
 from lock_manager import LockManager
 
+LOCK_PATH = '/tmp/set_run_dialog.lock'
+
 class SetRunDialog(QDialog):
     def __init__(self, parent=None):
         super(SetRunDialog, self).__init__(parent)
@@ -50,12 +52,13 @@ if __name__=='__main__':
 
     app = QApplication(sys.argv)
 
-    if not LockManager.get_lock():
-        QMessageBox.warning(None, 'Warning', 'Another same process is running. If not, please delete lock file [ %s ].' % LockManager.get_lock_path(), QMessageBox.Ok)
+    lock_manager = LockManager(LOCK_PATH)
+    if not lock_manager.get_lock():
+        QMessageBox.warning(None, 'Warning', 'Another same process is running. If not, please delete lock file [ %s ].' % lock_manager.get_lock_path(), QMessageBox.Ok)
         sys.exit(1)
     
     win = SetRunDialog()
     win.show()
     ret = app.exec_()
-    LockManager.release_lock()
+    lock_manager.release_lock()
     sys.exit(ret)

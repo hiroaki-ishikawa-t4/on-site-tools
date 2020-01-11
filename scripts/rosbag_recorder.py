@@ -11,6 +11,7 @@ from lock_manager import LockManager
 from settings_manager import SettingsManager
 
 CONFIG_FILE = 'rosbag_recoder.ini'
+LOCK_PATH = '/tmp/rosbag_recoder.lock'
 
 class RosbagRecorderDialog(QDialog):
     def __init__(self, parent=None):
@@ -82,12 +83,13 @@ if __name__=='__main__':
 
     app = QApplication(sys.argv)
 
-    if not LockManager.get_lock():
-        QMessageBox.warning(None, 'Warning', 'Another same process is running. If not, please delete lock file [ %s ].' % LockManager.get_lock_path(), QMessageBox.Ok)
+    lock_manager = LockManager(LOCK_PATH)
+    if not lock_manager.get_lock():
+        QMessageBox.warning(None, 'Warning', 'Another same process is running. If not, please delete lock file [ %s ].' % lock_manager.get_lock_path(), QMessageBox.Ok)
         sys.exit(1)
     
     win = RosbagRecorderDialog()
     win.show()
     ret = app.exec_()
-    LockManager.release_lock()
+    lock_manager.release_lock()
     sys.exit(ret)

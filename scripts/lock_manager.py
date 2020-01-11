@@ -1,31 +1,30 @@
 # -*- coding: utf-8 -*-
 import os
 
-LOCK_PATH = '/tmp/on-site-tool.lock'
 
 class LockManager(object):
-    @classmethod
-    def release_lock(cls):
+    def __init__(self, lock_path):
+        self.lock_path = lock_path
+
+    def release_lock(self):
         # type: () -> None
         # Delete lock file
         try:
-            os.remove(LOCK_PATH)
+            os.remove(self.lock_path)
         except OSError:
             print('[on-site-tools] Lock file is missing.')
 
-    @classmethod
-    def get_lock(cls):
+    def get_lock(self):
         # type: () -> bool
 
         # Check previous lock
-        if os.path.exists(LOCK_PATH):
+        if os.path.exists(self.lock_path):
             return False
         else:
             # Create lock file
-            with open(LOCK_PATH, 'w') as f:
+            with open(self.lock_path, 'w') as f:
                 f.write('')
             return True
     
-    @classmethod
-    def get_lock_path(cls):
-        return LOCK_PATH
+    def get_lock_path(self):
+        return self.lock_path
