@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './ui/set_run_dialog.ui'
 #
-# Created: Sat Jan 11 21:39:01 2020
+# Created: Mon Jan 13 16:42:21 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -41,6 +41,9 @@ class Ui_set_run_dialog(object):
 
         self.retranslateUi(set_run_dialog)
         QtCore.QMetaObject.connectSlotsByName(set_run_dialog)
+        set_run_dialog.setTabOrder(self.linear_edit, self.angular_edit)
+        set_run_dialog.setTabOrder(self.angular_edit, self.start_button)
+        set_run_dialog.setTabOrder(self.start_button, self.stop_button)
 
     def retranslateUi(self, set_run_dialog):
         set_run_dialog.setWindowTitle(QtGui.QApplication.translate("set_run_dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))

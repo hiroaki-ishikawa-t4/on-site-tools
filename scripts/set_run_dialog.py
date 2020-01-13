@@ -39,9 +39,14 @@ class SetRunDialog(QDialog):
             return
         # Set value
         self.vehicle_manual_controller.set_velocity_kmph(linear_kmph, steer_angle)
+        # Transfer focus
+        self.ui.stop_button.setFocus()
 
     def stop_button_clicked(self):
+        # Set value
         self.vehicle_manual_controller.set_velocity_kmph(0.0, 0.0)
+        # Transfer focus
+        self.ui.start_button.setFocus()
 
     def closeEvent(self, event):
         # Stop vehicle for sure

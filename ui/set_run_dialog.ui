@@ -64,6 +64,12 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>linear_edit</tabstop>
+  <tabstop>angular_edit</tabstop>
+  <tabstop>start_button</tabstop>
+  <tabstop>stop_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
