@@ -164,6 +164,8 @@ install(
   PROGRAMS
     scripts/set_run_dialog.py
     scripts/rosbag_recorder.py
+    scripts/waypoint_player.py
+    scripts/waypoint_recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
