@@ -19,6 +19,20 @@ Rosbag frontend panel with useful functions.
 rosrun on-site-tools rosbag_recoder.py
 ```
 
+### waypoint_player
+waypoint_loader frontend panel with velocity override function.
+
+```
+rosrun on-site-tools waypoint_player.py
+```
+
+### waypoint_recorder
+waypoint_saver frontend panel
+
+```
+rosrun on-site-tools waypoint_recorder.py
+```
+
 
 Notes for developer
 -----------------------
