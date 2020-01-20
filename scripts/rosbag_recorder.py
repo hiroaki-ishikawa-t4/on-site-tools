@@ -7,6 +7,7 @@ from PySide.QtGui import *
 from PySide.QtCore import *
 from ui.ui_rosbag_recorder import Ui_rosbag_recorder
 from controller.rosbag_controller import RosbagController
+from controller.candump_controller import CandumpController
 from lock_manager import LockManager
 from settings_manager import SettingsManager
 
@@ -19,6 +20,10 @@ class RosbagRecorderDialog(QDialog):
         self.ui = Ui_rosbag_recorder()
         self.ui.setupUi(self)
 
+        self.rosbag_controller = RosbagController()
+        self.candump_controller = CandumpController()
+        self.found_candump = self.candump_controller.check_candump_exist()
+
         self.ui.start_button.clicked.connect(self.start_button_clicked)
         self.ui.stop_button.clicked.connect(self.stop_button_clicked)
         self.ui.choose_button.clicked.connect(self.choose_button_clicked)
@@ -26,8 +31,6 @@ class RosbagRecorderDialog(QDialog):
         self.ui.start_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
         self.load_ui_info()
-
-        self.rosbag_controller = RosbagController()
 
         # Set window to stay top
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
@@ -55,18 +58,30 @@ class RosbagRecorderDialog(QDialog):
             if ret == QMessageBox.Yes:
                 options = '-a'
 
-        # Start record
+        # Start rosbag record
         if not self.rosbag_controller.start_record(root_dir, title, description, options):
             QMessageBox.warning(None, 'Warning', 'Failed to start rosbag record!', QMessageBox.Ok)
             return
+
+        # Start candump
+        if self.found_candump and self.ui.candump_checkbox.isChecked():
+            if not self.candump_controller.start(self.ui.can_device_edit.text(), save_dir):
+                QMessageBox.warning(None, 'Warning', 'Failed to start candump. Continue...', QMessageBox.Ok)
 
         self.ui.start_button.setEnabled(False)
         self.ui.stop_button.setEnabled(True)
 
     def stop_button_clicked(self):
+        # Finish rosbag
         if not self.rosbag_controller.finish_record():
             QMessageBox.warning(None, 'Error', 'Failed to stop rosbag record!', QMessageBox.Ok)
             return
+
+        # Finish candump
+        if self.candump_controller.is_working():
+            if not self.candump_controller.finish():
+                QMessageBox.warning(None, 'Error', 'Failed to stop candump!', QMessageBox.Ok)
+
         self.ui.start_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
 
@@ -79,6 +94,14 @@ class RosbagRecorderDialog(QDialog):
         settings.load(self.ui.title_edit)
         settings.load(self.ui.description_edit)
         settings.load(self.ui.command_option_edit)
+        settings.load(self.ui.can_device_edit)
+        settings.load(self.ui.candump_checkbox)
+
+        # Set default value
+        if self.ui.can_device_edit.text() == '':
+            self.ui.can_device_edit.setText('can0')
+
+        self.ui.candump_checkbox.setEnabled(self.found_candump)
 
     def save_ui_info(self):
         settings = SettingsManager(CONFIG_FILE)
@@ -86,6 +109,8 @@ class RosbagRecorderDialog(QDialog):
         settings.save(self.ui.title_edit)
         settings.save(self.ui.description_edit)
         settings.save(self.ui.command_option_edit)
+        settings.save(self.ui.can_device_edit)
+        settings.save(self.ui.candump_checkbox)
 
 if __name__=='__main__':
     rospy.init_node('rosbag_recorder')

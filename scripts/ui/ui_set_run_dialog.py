@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './ui/set_run_dialog.ui'
 #
-# Created: Tue Jan 14 00:59:55 2020
+# Created: Sun Jan 19 20:52:10 2020
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
