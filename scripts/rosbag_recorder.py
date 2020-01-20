@@ -11,8 +11,8 @@ from controller.candump_controller import CandumpController
 from lock_manager import LockManager
 from settings_manager import SettingsManager
 
-CONFIG_FILE = 'rosbag_recoder.ini'
-LOCK_PATH = '/tmp/rosbag_recoder.lock'
+CONFIG_FILE = 'rosbag_recorder.ini'
+LOCK_PATH = '/tmp/rosbag_recorder.lock'
 
 class RosbagRecorderDialog(QDialog):
     def __init__(self, parent=None):

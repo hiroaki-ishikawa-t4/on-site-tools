@@ -10,8 +10,8 @@ from controller.waypoint_saver_controller import WaypointSaverController
 from lock_manager import LockManager
 from settings_manager import SettingsManager
 
-CONFIG_FILE = 'waypoint_recoder.ini'
-LOCK_PATH = '/tmp/waypoint_recoder.lock'
+CONFIG_FILE = 'waypoint_recorder.ini'
+LOCK_PATH = '/tmp/waypoint_recorder.lock'
 
 class WaypointRecorderDialog(QDialog):
     def __init__(self, parent=None):
