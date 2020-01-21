@@ -50,7 +50,7 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>pyside-tools</buildtool_depend>
-  <exec_depend>python-pyside</exec_depend>
+  <exec_depend>python-qt-bindings</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
