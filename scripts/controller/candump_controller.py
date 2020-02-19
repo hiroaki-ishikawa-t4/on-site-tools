@@ -19,7 +19,7 @@ class CandumpController(object):
     def start(self, device_name, output_dir):
         # type: (str, str) -> bool
         # Start candump
-        cmd = 'candump %s > %s' % (device_name, output_dir + '/candump.txt')
+        cmd = 'candump -l %s' % device_name
         rospy.loginfo('[on-site-tools] Will execute ' + cmd)
         self.candump_process = subprocess.Popen(cmd, shell=True, cwd=output_dir)
 
