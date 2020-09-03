@@ -17,7 +17,6 @@
 
 import sys
 import os
-import rospy
 from PySide.QtGui import *
 from PySide.QtCore import *
 from ui.ui_rosbag_recorder import Ui_rosbag_recorder
@@ -128,8 +127,6 @@ class RosbagRecorderDialog(QDialog):
         settings.save(self.ui.candump_checkbox)
 
 if __name__=='__main__':
-    rospy.init_node('rosbag_recorder')
-
     app = QApplication(sys.argv)
 
     lock_manager = LockManager(LOCK_PATH)

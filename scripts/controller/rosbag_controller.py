@@ -14,12 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
 import subprocess
 import signal
 import time
 import os
 import codecs
-import rospy
+import sys
 
 
 class RosbagController(object):
@@ -30,7 +31,7 @@ class RosbagController(object):
     def start_record(self, root_dir, title, description, options):
         # type: (str, str, str, str, str) -> bool
         if self.rosbag_process:
-            rospy.logwarn('[on-site-tools] rosbag is already running.')
+            print('[on-site-tools] rosbag is already running.', file=sys.stderr)
             return False
 
         # Provide save directory
@@ -53,7 +54,7 @@ class RosbagController(object):
 
         # Start rosbag
         cmd = '/opt/ros/melodic/bin/rosbag record ' + options.replace('\n', ' ')
-        rospy.loginfo('[on-site-tools] Will execute ' + cmd)
+        print('[on-site-tools] Will execute ' + cmd)
         self.rosbag_process = subprocess.Popen(cmd, shell=True, cwd=save_dir)
 
         # Check if finish soon. If so, something must be wrong.
@@ -71,11 +72,11 @@ class RosbagController(object):
             try:
                 os.killpg(os.getpgid(self.rosbag_process.pid), signal.SIGINT)
             except OSError:
-                rospy.logwarn('[on-site-tools] Error during killing rosbag')
+                print('[on-site-tools] Error during killing rosbag', file=sys.stderr)
             self.rosbag_process.wait()
             self.rosbag_process = None
         else:
-            rospy.logwarn('[on-site-tools] rosbag is not running.')
+            print('[on-site-tools] rosbag is not running.', file=sys.stderr)
         return True
 
     def collect_information(self):
@@ -88,5 +89,5 @@ class RosbagController(object):
             print(result)
             return result
         except:
-            rospy.logwarn('[on-site-tools] Error collecting information. Continue...')
+            print('[on-site-tools] Error collecting information. Continue...', file=sys.stderr)
             return ''
