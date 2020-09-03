@@ -52,7 +52,8 @@ class RosbagRecorderDialog(QDialog):
     def choose_button_clicked(self):
         # Choose save root directory
         path = QFileDialog.getExistingDirectory(self)
-        self.ui.root_dir_edit.setText(path)
+        if path != '':
+            self.ui.root_dir_edit.setText(path)
 
     def start_button_clicked(self):
         root_dir = self.ui.root_dir_edit.text()
