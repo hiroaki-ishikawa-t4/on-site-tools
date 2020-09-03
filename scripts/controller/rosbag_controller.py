@@ -27,6 +27,7 @@ class RosbagController(object):
 
     def __init__(self):
         self.rosbag_process = None
+        self.current_description_path = ''
         # To ignore sigint when killing rosbag processes
         signal.signal(signal.SIGINT, self.sigint_handler)
 
@@ -49,7 +50,8 @@ class RosbagController(object):
             os.mkdir(save_dir)
 
         # Save description
-        with codecs.open(save_dir+'/description.txt', 'w', 'utf-8') as f:
+        self.current_description_path = save_dir + '/description.txt'
+        with codecs.open(self.current_description_path, 'w', 'utf-8') as f:
             f.write(description)
             f.close()
         
@@ -84,6 +86,13 @@ class RosbagController(object):
         else:
             print('[on-site-tools] rosbag is not running.', file=sys.stderr)
         return True
+
+    def update_description(self, description):
+        # type: () -> None
+        if self.rosbag_process and os.path.exists(self.current_description_path):
+            with codecs.open(self.current_description_path, 'w', 'utf-8') as f:
+                f.write(description)
+                f.close()
 
     def collect_information(self):
         # type: () -> str

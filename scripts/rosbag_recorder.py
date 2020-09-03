@@ -41,6 +41,7 @@ class RosbagRecorderDialog(QDialog):
         self.ui.start_button.clicked.connect(self.start_button_clicked)
         self.ui.stop_button.clicked.connect(self.stop_button_clicked)
         self.ui.choose_button.clicked.connect(self.choose_button_clicked)
+        self.ui.description_edit.textChanged.connect(self.description_edit_text_changed)
 
         self.ui.start_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
@@ -101,6 +102,9 @@ class RosbagRecorderDialog(QDialog):
         self.ui.start_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
         self.setStyleSheet('')
+
+    def description_edit_text_changed(self):
+        self.rosbag_controller.update_description(self.ui.description_edit.toPlainText())
 
     def closeEvent(self, event):
         self.save_ui_info()
