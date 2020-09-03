@@ -85,6 +85,7 @@ class RosbagRecorderDialog(QDialog):
 
         self.ui.start_button.setEnabled(False)
         self.ui.stop_button.setEnabled(True)
+        self.setStyleSheet('background-color: hotpink;')
 
     def stop_button_clicked(self):
         # Finish rosbag
@@ -99,6 +100,7 @@ class RosbagRecorderDialog(QDialog):
 
         self.ui.start_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
+        self.setStyleSheet('')
 
     def closeEvent(self, event):
         self.save_ui_info()

@@ -27,6 +27,12 @@ class RosbagController(object):
 
     def __init__(self):
         self.rosbag_process = None
+        # To ignore sigint when killing rosbag processes
+        signal.signal(signal.SIGINT, self.sigint_handler)
+
+    def sigint_handler(self, sig, frame):
+        if not self.rosbag_process:
+            sys.exit(1)
 
     def start_record(self, root_dir, title, description, options):
         # type: (str, str, str, str, str) -> bool
