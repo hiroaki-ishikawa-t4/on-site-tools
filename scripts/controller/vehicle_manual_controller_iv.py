@@ -18,13 +18,13 @@ import sys
 import rospy
 
 try:
-    from autoware_msgs.msg import VehicleCmd
+    from autoware_vehicle_msgs.msg import VehicleCommand
 except ImportError:
-    print('Cannot import vehicle command message. Maybe you are using autoware.iv. This app is for autoware.ai.')
+    print('Cannot import vehicle command message. Maybe you are using autoware.ai. This app is for autoware.iv.')
     sys.exit(1)
 
 
-class VehicleManualController(object):
+class VehicleManualControllerIv(object):
     def __init__(self):
         # Setup timer
         self.timer = rospy.Timer(rospy.Duration(0.1), self.timer_callback)
@@ -32,7 +32,7 @@ class VehicleManualController(object):
         self.velocity_linear = 0.0
         self.steer_angle = 0.0
         # Publisher
-        self.velocity_cmd_pub = rospy.Publisher('/vehicle_cmd', VehicleCmd, queue_size=1)
+        self.velocity_cmd_pub = rospy.Publisher('/control/vehicle_cmd', VehicleCommand, queue_size=1)
 
     def set_velocity_kmph(self, linear_kmph, steer_angle_deg):
         # type: (float, float) -> None
@@ -40,16 +40,14 @@ class VehicleManualController(object):
         self.steer_angle = steer_angle_deg
 
     def timer_callback(self, event):
-        msg = VehicleCmd()
-        msg.ctrl_cmd.linear_velocity = self.velocity_linear
-        msg.twist_cmd.twist.linear.x = self.velocity_linear
+        msg = VehicleCommand()
+        msg.control.velocity = self.velocity_linear
         self.velocity_cmd_pub.publish(msg)
 
     def stop_now(self):
         # If not call this, last command may be overwritten by callback.
         self.timer.shutdown()
         # Send command to stop
-        msg = VehicleCmd()
-        msg.ctrl_cmd.linear_velocity = 0.0
-        msg.twist_cmd.twist.linear.x = 0.0
+        msg = VehicleCommand()
+        msg.control.velocity = 0.0
         self.velocity_cmd_pub.publish(msg)
