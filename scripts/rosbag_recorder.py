@@ -15,8 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
 import sys
 import os
+import psutil
 from PySide.QtGui import *
 from PySide.QtCore import *
 from ui.ui_rosbag_recorder import Ui_rosbag_recorder
@@ -76,6 +78,15 @@ class RosbagRecorderDialog(QDialog):
             ret = QMessageBox.information(None, 'Info', "You didn't specified any option. Is it means you want to record everything?", QMessageBox.Yes | QMessageBox.No)
             if ret == QMessageBox.Yes:
                 options = '-a'
+
+        # Check disk usage
+        try:
+            if psutil.disk_usage(root_dir).percent >= 80.0:
+                ret = QMessageBox.warning(None, 'Warning', "Less than 20% left on destination storage. Are you okay to continue?", QMessageBox.Yes | QMessageBox.No)
+                if ret == QMessageBox.No:
+                    return
+        except OSError:
+            print('[on-site-tools] Could not get disk usage of destination storage.', file=sys.stderr)
 
         # Start rosbag record
         if not self.rosbag_controller.start_record(root_dir, title, description, options):
