@@ -50,6 +50,9 @@ class RosbagRecorderDialog(QDialog):
         # Set window to stay top
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
 
+        # Get window default background color
+        self.default_background_color = self.palette().color(self.backgroundRole())
+
     def choose_button_clicked(self):
         # Choose save root directory
         path = QFileDialog.getExistingDirectory(self)
@@ -84,9 +87,7 @@ class RosbagRecorderDialog(QDialog):
             if not self.candump_controller.start(self.ui.can_device_edit.text(), save_dir):
                 QMessageBox.warning(None, 'Warning', 'Failed to start candump. Continue...', QMessageBox.Ok)
 
-        self.ui.start_button.setEnabled(False)
-        self.ui.stop_button.setEnabled(True)
-        self.setStyleSheet('background-color: hotpink;')
+        self.set_ui_state('recording')
 
     def stop_button_clicked(self):
         # Finish rosbag
@@ -99,9 +100,7 @@ class RosbagRecorderDialog(QDialog):
             if not self.candump_controller.finish():
                 QMessageBox.warning(None, 'Error', 'Failed to stop candump!', QMessageBox.Ok)
 
-        self.ui.start_button.setEnabled(True)
-        self.ui.stop_button.setEnabled(False)
-        self.setStyleSheet('')
+        self.set_ui_state('normal')
 
     def description_edit_text_changed(self):
         self.rosbag_controller.update_description(self.ui.description_edit.toPlainText())
@@ -132,6 +131,20 @@ class RosbagRecorderDialog(QDialog):
         settings.save(self.ui.command_option_edit)
         settings.save(self.ui.can_device_edit)
         settings.save(self.ui.candump_checkbox)
+
+    def set_ui_state(self, state):
+        if state == 'normal':
+            self.ui.start_button.setEnabled(True)
+            self.ui.stop_button.setEnabled(False)
+            palette = self.palette()
+            palette.setColor(self.backgroundRole(), self.default_background_color)
+            self.setPalette(palette)
+        elif state == 'recording':
+            self.ui.start_button.setEnabled(False)
+            self.ui.stop_button.setEnabled(True)
+            palette = self.palette()
+            palette.setColor(self.backgroundRole(), Qt.yellow)
+            self.setPalette(palette)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
