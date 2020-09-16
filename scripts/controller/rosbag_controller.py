@@ -28,12 +28,6 @@ class RosbagController(object):
     def __init__(self):
         self.rosbag_process = None
         self.current_description_path = ''
-        # To ignore sigint when killing rosbag processes
-        signal.signal(signal.SIGINT, self.sigint_handler)
-
-    def sigint_handler(self, sig, frame):
-        if not self.rosbag_process:
-            sys.exit(1)
 
     def start_record(self, root_dir, title, description, options):
         # type: (str, str, str, str, str) -> bool
@@ -63,7 +57,7 @@ class RosbagController(object):
         # Start rosbag
         cmd = '/opt/ros/melodic/bin/rosbag record ' + options.replace('\n', ' ')
         print('[on-site-tools] Will execute ' + cmd)
-        self.rosbag_process = subprocess.Popen(cmd, shell=True, cwd=save_dir)
+        self.rosbag_process = subprocess.Popen(cmd, shell=True, cwd=save_dir, preexec_fn=os.setsid)
 
         # Check if finish soon. If so, something must be wrong.
         time.sleep(0.5)
