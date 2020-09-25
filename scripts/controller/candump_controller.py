@@ -36,7 +36,7 @@ class CandumpController(object):
         # Start candump
         cmd = 'candump -l %s' % device_name
         rospy.loginfo('[on-site-tools] Will execute ' + cmd)
-        self.candump_process = subprocess.Popen(cmd, shell=True, cwd=output_dir)
+        self.candump_process = subprocess.Popen(cmd, shell=True, cwd=output_dir, preexec_fn=os.setsid)
 
         # Check if finish soon. If so, something must be wrong.
         time.sleep(0.5)
